@@ -16,3 +16,12 @@ build
 
 # Logs:
 *.log
+
+# IDE
+.idea
+
+# Local test db
+default.db
+
+# Local site_media
+media/*
