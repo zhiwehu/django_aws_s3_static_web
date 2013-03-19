@@ -17,4 +17,6 @@ urlpatterns = patterns('',
 
     # Uncomment the next line to enable the admin:
     url(r'^admin/', include(admin.site.urls)),
+
+    url(r'^s3/', include('s3_static_web.urls')),
 )
