@@ -1,4 +1,8 @@
-from StringIO import StringIO
+try:
+    from cStringIO import StringIO
+except:
+    from StringIO import StringIO
+
 import mimetypes
 import zipfile
 
@@ -17,7 +21,7 @@ def connect_aws_s3(key=None, secret=None):
 
 
 def create_bucket(conn, bucket_name):
-    return conn.create_bucket(bucket_name)
+    return conn.create_bucket(bucket_name, policy='public-read')
 
 
 def push_file_to_s3(bucket, file_name, content):
@@ -29,10 +33,11 @@ def push_file_to_s3(bucket, file_name, content):
 
     try:
         content_type = mimetypes.guess_type(file_name)[0]
-        key.set_metadata('Content-Type', content_type)
+        if content_type:
+            key.set_metadata('Content-Type', content_type)
         key.set_contents_from_file(content)
     except Exception as e:
-        raise IOError('Error during uploading file - %s' % e.message)
+        raise IOError('Error during uploading file %s - %s' % (file_name, e.message))
 
     content.seek(0, 2)
     orig_size = content.tell()
