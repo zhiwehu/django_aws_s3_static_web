@@ -1,3 +1,4 @@
+from StringIO import StringIO
 import mimetypes
 import zipfile
 
@@ -48,10 +49,16 @@ def push_file_to_s3(bucket, file_name, content):
     return file_name
 
 
-def fileiterator(zipf):
-    with zipfile.ZipFile(zipf, "r", zipfile.ZIP_STORED) as openzip:
+def fileiterator(zip_file):
+    with zipfile.ZipFile(zip_file, "r", zipfile.ZIP_STORED) as openzip:
         filelist = openzip.infolist()
         for f in filelist:
             if f.file_size:
                 yield (f.filename, openzip.read(f))
 
+
+def upload_zip_file_s3(bucket, zip_file):
+    for filename, content in fileiterator(zip_file):
+        content_string = StringIO()
+        content_string.write(content)
+        push_file_to_s3(bucket, filename, content_string)
