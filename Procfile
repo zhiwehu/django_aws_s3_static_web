@@ -1,1 +1,1 @@
-web: gunicorn django_aws_s3_static_web.wsgi
+web: gunicorn s3staticweb.wsgi
