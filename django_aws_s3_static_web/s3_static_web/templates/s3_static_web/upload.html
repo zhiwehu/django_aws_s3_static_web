@@ -1,0 +1,18 @@
+{% extends "s3_static_web/base.html" %}
+
+{% load i18n bootstrap_toolkit %}
+
+{% block title %}{% trans "Upload" %}{% endblock %}
+
+{% block content %}
+    <div class="page-header"><h1>{% trans "Upload" %}</h1></div>
+    <div>
+        <form class="form-horizontal" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ upload_form|as_bootstrap }}
+            <div class="form-actions">
+                <button type="submit" class="btn">{% trans "Submit" %}</button>
+            </div>
+        </form>
+    </div>
+{% endblock %}

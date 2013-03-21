@@ -60,3 +60,6 @@ MIDDLEWARE_CLASSES += (
     'debug_toolbar.middleware.DebugToolbarMiddleware',
 )
 ########## END TOOLBAR CONFIGURATION
+
+AWS_ACCESS_KEY_ID = 'AKIAITBUV2PFQN7V7TRQ'
+AWS_SECRET_ACCESS_KEY = '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'

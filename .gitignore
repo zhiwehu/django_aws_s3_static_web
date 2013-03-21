@@ -17,6 +17,9 @@ build
 # Logs:
 *.log
 
+# Virtualenv
+env/*
+
 # IDE
 .idea
 
