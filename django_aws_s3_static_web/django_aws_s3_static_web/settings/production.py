@@ -76,5 +76,6 @@ AWS_SECRET_ACCESS_KEY = get_env_setting('AWS_SECRET_ACCESS_KEY')
 # Honor the 'X-Forwarded-Proto' header for request.is_secure()
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
+DEBUG=True
 
 ALLOWED_HOSTS=['s3staticweb.herokuapp.com',]
