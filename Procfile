@@ -1,1 +1,1 @@
-web: gunicorn django_aws_s3_static_web.wsgi
+web python manage.py runserver 0.0.0.0:$PORT --noreload 
