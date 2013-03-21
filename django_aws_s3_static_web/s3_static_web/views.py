@@ -14,8 +14,8 @@ def upload(request, template='s3_static_web/upload.html', extra_context=None):
         if upload_form.is_valid():
             bucket = upload_form.bucket
             zipped_file = upload_form.cleaned_data['zip_file']
-            index_html = upload_form.cleaned_data.get('index_html', 'index.html')
-            error_html = upload_form.cleaned_data.get('error_html', 'error.html')
+            index_html = upload_form.cleaned_data.get('index_html', None)
+            error_html = upload_form.cleaned_data.get('error_html', None)
             upload_zip_file_s3(bucket, zipped_file)
             bucket.configure_website(index_html, error_html)
             website_url = bucket.get_website_endpoint()
