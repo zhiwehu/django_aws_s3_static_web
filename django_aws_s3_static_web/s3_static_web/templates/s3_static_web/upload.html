@@ -6,13 +6,18 @@
 
 {% block content %}
     <div class="page-header"><h1>{% trans "Upload" %}</h1></div>
-    <div>
-        <form class="form-horizontal" method="POST" enctype="multipart/form-data">
-            {% csrf_token %}
-            {{ upload_form|as_bootstrap }}
-            <div class="form-actions">
-                <button type="submit" class="btn">{% trans "Submit" %}</button>
-            </div>
-        </form>
+    <div class="row">
+        <div class="span6">
+            <form class="form-horizontal" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ upload_form|as_bootstrap }}
+                <div class="form-actions">
+                    <button type="submit" class="btn">{% trans "Submit" %}</button>
+                </div>
+            </form>
+        </div>
+        <div class="span6">
+            <img class="img-polaroid" src="{{ STATIC_URL }}img/s3staticsettings.png">
+        </div>
     </div>
 {% endblock %}
