@@ -1,5 +1,5 @@
 """Common settings and globals."""
-
+from django.core.urlresolvers import reverse_lazy
 
 from os.path import abspath, basename, dirname, join, normpath
 from sys import path
@@ -132,6 +132,10 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.tz',
     'django.contrib.messages.context_processors.messages',
     'django.core.context_processors.request',
+
+    # For allauth
+    'allauth.account.context_processors.account',
+    'allauth.socialaccount.context_processors.socialaccount',
 )
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#template-loaders
@@ -146,6 +150,11 @@ TEMPLATE_DIRS = (
 )
 ########## END TEMPLATE CONFIGURATION
 
+from django.conf.global_settings import AUTHENTICATION_BACKENDS
+
+AUTHENTICATION_BACKENDS += ('django.contrib.auth.backends.ModelBackend',
+                            'allauth.account.auth_backends.AuthenticationBackend',
+)
 
 ########## MIDDLEWARE CONFIGURATION
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#middleware-classes
@@ -188,6 +197,9 @@ THIRD_PARTY_APPS = (
     # Database migration helpers:
     'south',
     'bootstrap_toolkit',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
 )
 
 # Apps specific for this project go here.
@@ -237,3 +249,9 @@ LOGGING = {
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#wsgi-application
 WSGI_APPLICATION = 'wsgi.application'
 ########## END WSGI CONFIGURATION
+
+LOGIN_URL = reverse_lazy('account_login')
+LOGOUT_URL = reverse_lazy('account_logout')
+LOGIN_REDIRECT_URL = reverse_lazy('home')
+
+from allauth_settings import *

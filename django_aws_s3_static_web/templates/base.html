@@ -1,4 +1,4 @@
-{% load i18n %}
+{% load i18n account bootstrap_toolkit %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -38,7 +38,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </a>
-                <a class="brand" href="{% url 'upload' %}">{% trans "Home" %}</a>
+                <a class="brand" href="{% url 'home' %}">{% trans "Home" %}</a>
 
                 <div class="nav-collapse collapse">
                     <ul class="nav">
@@ -46,12 +46,37 @@
                     </ul>
                 </div>
                 <!--/.nav-collapse -->
+
+                <ul class="nav pull-right">
+                    {% if user.is_authenticated %}
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                <i class="icon-user icon-white"></i>
+                                {% user_display user %}
+                                <span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a id="logout_link" href="{% url 'account_logout' %}">{% trans "Logout" %}</a>
+                                </li>
+                            </ul>
+                        </li>
+                    {% else %}
+                        <li>
+                            <a href="{% url 'account_login' %}">
+                                <i class="icon-user icon-white"></i>
+                                {% trans "Sign In" %}
+                            </a>
+                        </li>
+                    {% endif %}
+                </ul>
             </div>
         </div>
     </div>
 
     <div id="container" class="container">
 
+        {% bootstrap_messages %}
         {% block content %}
             <h1>{% block page_title %}Example Base Template{% endblock page_title %}</h1>
             <p>Use this document as a way to quick start any new project.</p>

@@ -6,3 +6,4 @@ logutils==0.3.3
 South==0.7.6
 boto
 django-bootstrap-toolkit
+django-allauth
