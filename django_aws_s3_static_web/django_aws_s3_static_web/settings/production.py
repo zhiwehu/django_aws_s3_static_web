@@ -48,7 +48,8 @@ SERVER_EMAIL = EMAIL_HOST_USER
 
 
 ########## DATABASE CONFIGURATION
-DATABASES = {}
+import dj_database_url
+DATABASES['default'] =  dj_database_url.config()
 ########## END DATABASE CONFIGURATION
 
 
@@ -66,3 +67,7 @@ SECRET_KEY = get_env_setting('SECRET_KEY')
 
 AWS_ACCESS_KEY_ID = get_env_setting('AWS_ACCESS_KEY_ID')
 AWS_SECRET_ACCESS_KEY = get_env_setting('AWS_SECRET_ACCESS_KEY')
+
+
+# Honor the 'X-Forwarded-Proto' header for request.is_secure()
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
