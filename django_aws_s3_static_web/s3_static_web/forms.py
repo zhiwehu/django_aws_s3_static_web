@@ -10,9 +10,9 @@ class UploadForm(forms.Form):
     bucket_name = forms.CharField(max_length=255, required=True, help_text=_(u'Please select a unicode bucket_name.'))
     zip_file = forms.FileField(required=True, help_text=_(u'The zip file contain all files of a static web site.'))
     index_html = forms.CharField(required=False, initial='index.html',
-                                 help_text=_(u'The default root default document.'))
+                                 help_text=_(u'Index Document'))
     error_html = forms.CharField(required=False, initial='error.html',
-                                 help_text=_(u'The default root default document.'))
+                                 help_text=_(u'Error Document'))
 
     def clean_bucket_name(self):
         bucket_name = self.cleaned_data['bucket_name']

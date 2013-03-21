@@ -1,5 +1,6 @@
 """Development settings and globals."""
-
+from django.core.exceptions import ImproperlyConfigured
+from os import environ
 
 from os.path import join, normpath
 
@@ -61,5 +62,18 @@ MIDDLEWARE_CLASSES += (
 )
 ########## END TOOLBAR CONFIGURATION
 
-AWS_ACCESS_KEY_ID = 'AKIAITBUV2PFQN7V7TRQ'
-AWS_SECRET_ACCESS_KEY = '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'
+
+def get_env_setting(setting):
+    """ Get the environment setting or return exception """
+    try:
+        return environ[setting]
+    except KeyError:
+        error_msg = "Set the %s env variable" % setting
+        raise ImproperlyConfigured(error_msg)
+
+AWS_ACCESS_KEY_ID = get_env_setting('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = get_env_setting('AWS_SECRET_ACCESS_KEY')
+
+DEBUG_TOOLBAR_CONFIG ={
+    'INTERCEPT_REDIRECTS' : False,
+}
