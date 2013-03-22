@@ -41,9 +41,9 @@ def static_site_post(request, static_site_id=None, template='s3_static_web/stati
             static_site = form.save(commit=False)
             static_site.user = request.user
             result = static_site.upload_zip_s3(bucket)
-            if result.get('errors', None):
-                for error in result['errors']:
-                    error(request, error)
+            errors = result.get('errors', None)
+            for error in errors:
+                error(request, error)
             static_site.save()
             return HttpResponseRedirect(reverse('static_site', args=[static_site.id, ]))
 
