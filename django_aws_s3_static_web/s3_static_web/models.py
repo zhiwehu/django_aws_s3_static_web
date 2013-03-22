@@ -29,8 +29,8 @@ def zip_file_upload_to(instance, filename):
 
 class StaticWebBucket(TimeStampedModel):
     user = models.ForeignKey(User)
-    title = models.CharField(max_length=255, verbose_name=_(u'Static Site Title'))
-    bucket_name = models.CharField(max_length=255, verbose_name=_(u' S3Bucket Name'),
+    title = models.CharField(max_length=255, verbose_name=_(u'Site Title'))
+    bucket_name = models.CharField(max_length=255, verbose_name=_(u' S3 Bucket Name'),
                                    help_text=_(u'A unique bucket name in AWS S3.'))
     index_html = models.CharField(max_length=255, verbose_name=_(u'Index html'), null=True, blank=True)
     error_html = models.CharField(max_length=255, verbose_name=_(u'Error html'), null=True, blank=True)
@@ -46,11 +46,21 @@ class StaticWebBucket(TimeStampedModel):
         return self.title
 
     def upload_zip_s3(self, bucket):
-        upload_zip_file_s3(bucket, self.zip_file)
+        result = {'errors': []}
+        try:
+            upload_zip_file_s3(bucket, self.zip_file)
+        except Exception as e:
+            result['error'].append(e.error_message)
         if self.index_html:
-            bucket.configure_website(suffix=self.index_html)
+            try:
+                bucket.configure_website(suffix=self.index_html)
+            except Exception as e:
+                result['error'].append(e.error_message)
         if self.error_html:
-            bucket.configure_website(error_key=self.error_html)
+            try:
+                bucket.configure_website(error_key=self.error_html)
+            except Exception as e:
+                result['error'].append(e.error_message)
         self.website_endpoint = bucket.get_website_endpoint()
 
     def remove_bucket(self):
