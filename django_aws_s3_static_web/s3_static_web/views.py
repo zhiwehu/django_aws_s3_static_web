@@ -1,4 +1,5 @@
 from django.contrib.auth.decorators import login_required
+from django.contrib.messages import success, error
 from django.core.urlresolvers import reverse
 from django.http import Http404, HttpResponseRedirect
 from django.shortcuts import render_to_response
@@ -82,9 +83,14 @@ def static_site(request, static_site_id, template='s3_static_web/static_site.htm
 def delete_static_site(request, static_site_id):
     try:
         static_site = StaticWebBucket.objects.get(user=request.user, pk=static_site_id)
+        static_site_title = static_site.title
     except:
         raise Http404
 
-    static_site.remove_bucket()
+    try:
+        static_site.remove_bucket()
+    except Exception as e:
+        error(request, e.error_message)
     static_site.delete()
+    success(request, _(u'Delete %s successful.' % static_site_title))
     return HttpResponseRedirect(reverse('user_static_sites'))

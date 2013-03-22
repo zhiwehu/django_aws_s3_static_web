@@ -56,6 +56,8 @@ class StaticWebBucket(TimeStampedModel):
     def remove_bucket(self):
         conn = connect_aws_s3()
         bucket = conn.get_bucket(self.bucket_name)
+        for key in bucket.list():
+            key.delete()
         conn.delete_bucket(bucket)
         pass
 

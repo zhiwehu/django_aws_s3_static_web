@@ -14,11 +14,25 @@
                         <a href="http://{{ static_site.website_endpoint }}">{{ static_site }}</a>
                         <a class="btn btn-small btn-primary"
                            href="{% url 'edit_static_site' static_site.id %}">{% trans "Edit" %}</a>
-                        <a class="btn btn-small btn-danger"
+                        <a class="btn btn-small btn-danger delete"
                            href="{% url 'delete_static_site' static_site.id %}">{% trans "Delete" %}</a>
                     </li>
                 {% endfor %}
             </ul>
         {% endif %}
     </div>
+{% endblock %}
+
+{% block extra_js %}
+    <script type="text/javascript">
+    $(function(){
+        $("a.delete").live("click", function(e){
+            if (confirm("Are you sure ?")) {
+                return true;
+            }
+            e.preventDefault();
+            return false;
+        });
+    });
+    </script>
 {% endblock %}
