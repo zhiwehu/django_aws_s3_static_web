@@ -2,17 +2,21 @@
 
 {% load i18n bootstrap_toolkit %}
 
-{% block title %}{% trans "Upload" %}{% endblock %}
+{% block title %}{{ action }}{% endblock %}
 
 {% block content %}
-    <div class="page-header"><h1>{% trans "Upload" %}</h1></div>
+    <div class="page-header">
+        <h1>{{ action }}</h1>
+    </div>
     <div class="row">
         <div class="span6">
             <form class="form-horizontal" method="POST" enctype="multipart/form-data">
                 {% csrf_token %}
-                {{ upload_form|as_bootstrap }}
+                {{ form|as_bootstrap }}
                 <div class="form-actions">
-                    <button type="submit" class="btn">{% trans "Submit" %}</button>
+                    <button type="submit" class="btn btn-success btn-large">
+                        {% trans "Submit" %}
+                    </button>
                 </div>
             </form>
         </div>

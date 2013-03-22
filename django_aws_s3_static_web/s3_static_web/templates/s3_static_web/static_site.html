@@ -1,0 +1,14 @@
+{% extends "s3_static_web/base.html" %}
+
+{% load i18n bootstrap_toolkit %}
+
+{% block title %}{{ static_site.title }}{% endblock %}
+
+{% block content %}
+    <div class="page-header">
+        <h1>{{ static_site.title }}</h1>
+    </div>
+    <div>
+        <a href="http://{{ static_site.website_endpoint }}">{{ static_site.website_endpoint }}</a>
+    </div>
+{% endblock %}

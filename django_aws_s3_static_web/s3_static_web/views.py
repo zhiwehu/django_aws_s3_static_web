@@ -1,38 +1,90 @@
 from django.contrib.auth.decorators import login_required
+from django.core.urlresolvers import reverse
+from django.http import Http404, HttpResponseRedirect
 from django.shortcuts import render_to_response
 from django.template import RequestContext
+from django.utils.translation import ugettext as _
 
-from .forms import UploadForm
-from .utils import upload_zip_file_s3
+from .forms import StaticWebForm
+from .models import StaticWebBucket
 
 
-@login_required
-def upload(request, template='s3_static_web/upload.html', extra_context=None):
-    upload_form = UploadForm()
-    if request.method == 'POST':
-        upload_form = UploadForm(data=request.POST, files=request.FILES)
-        if upload_form.is_valid():
-            bucket = upload_form.bucket
-            zipped_file = upload_form.cleaned_data['zip_file']
-            index_html = upload_form.cleaned_data.get('index_html', '')
-            error_html = upload_form.cleaned_data.get('error_html', '')
-            upload_zip_file_s3(bucket, zipped_file)
-            if index_html:
-                bucket.configure_website(suffix=index_html)
-            if error_html:
-                bucket.configure_website(error_key=error_html)
-            website_url = bucket.get_website_endpoint()
-            context = {
-                'website_url': website_url,
-            }
-            if extra_context:
-                context.update(extra_context)
-            return render_to_response('s3_static_web/upload_success.html', context,
-                                      context_instance=RequestContext(request))
-
+def home(request, template='s3_static_web/public_static_sites.html', extra_context=None):
+    static_sites = StaticWebBucket.objects.filter(is_public_this_site=True)
     context = {
-        'upload_form': upload_form,
+        'static_sites': static_sites,
     }
     if extra_context:
         context.update(extra_context)
     return render_to_response(template, context, context_instance=RequestContext(request))
+
+
+@login_required
+def static_site_post(request, static_site_id=None, template='s3_static_web/static_site_post.html', extra_context=None):
+    static_site = None
+    if static_site_id:
+        action = _(u'Update')
+        try:
+            static_site = StaticWebBucket.objects.get(user=request.user, pk=static_site_id)
+            form = StaticWebForm(instance=static_site)
+        except:
+            raise Http404
+    else:
+        action = _(u'Create')
+        form = StaticWebForm(instance=static_site)
+
+    if request.method == 'POST':
+        form = StaticWebForm(data=request.POST, files=request.FILES, instance=static_site)
+        if form.is_valid():
+            bucket = form.bucket
+            static_site = form.save(commit=False)
+            static_site.user = request.user
+            static_site.upload_zip_s3(bucket)
+            static_site.save()
+            return HttpResponseRedirect(reverse('static_site', args=[static_site.id, ]))
+
+    context = {
+        'form': form,
+        'action': action,
+    }
+    if extra_context:
+        context.update(extra_context)
+    return render_to_response(template, context, context_instance=RequestContext(request))
+
+
+@login_required
+def user_static_sites(request, template='s3_static_web/user_static_sites.html', extra_context=None):
+    static_sites = StaticWebBucket.objects.filter(user=request.user)
+    context = {
+        'static_sites': static_sites,
+    }
+    if extra_context:
+        context.update(extra_context)
+    return render_to_response(template, context, context_instance=RequestContext(request))
+
+
+@login_required
+def static_site(request, static_site_id, template='s3_static_web/static_site.html', extra_context=None):
+    try:
+        static_site = StaticWebBucket.objects.get(user=request.user, pk=static_site_id)
+    except:
+        raise Http404
+
+    context = {
+        'static_site': static_site,
+    }
+    if extra_context:
+        context.update(extra_context)
+    return render_to_response(template, context, context_instance=RequestContext(request))
+
+
+@login_required
+def delete_static_site(request, static_site_id):
+    try:
+        static_site = StaticWebBucket.objects.get(user=request.user, pk=static_site_id)
+    except:
+        raise Http404
+
+    static_site.remove_bucket()
+    static_site.delete()
+    return HttpResponseRedirect(reverse('user_static_sites'))

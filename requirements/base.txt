@@ -8,3 +8,5 @@ boto
 django-bootstrap-toolkit
 django-allauth
 chardet
+PIL
+django-storages

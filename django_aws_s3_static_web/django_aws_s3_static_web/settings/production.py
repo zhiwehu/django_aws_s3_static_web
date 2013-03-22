@@ -79,3 +79,15 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 DEBUG=True
 
 ALLOWED_HOSTS=['s3staticweb.herokuapp.com',]
+
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
+AWS_STORAGE_BUCKET_NAME='s3staticweb'
+AWS_S3_SECURE_URLS=False
+
+ASSETS_URL = 'http://%s.s3.amazonaws.com/' % AWS_STORAGE_BUCKET_NAME
+MEDIA_ROOT = ASSETS_URL + 'media/'
+MEDIA_URL = ASSETS_URL + 'media/'
+STATIC_ROOT = ASSETS_URL + 'static/'
+STATIC_URL = ASSETS_URL + 'static/'
+#to stop images expiring
+AWS_QUERYSTRING_AUTH = False

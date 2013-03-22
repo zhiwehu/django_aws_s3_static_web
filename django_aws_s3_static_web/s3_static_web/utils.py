@@ -1,8 +1,11 @@
+from uuid import uuid4
 from chardet import detect
 
 try:
     from cStringIO import StringIO
-except:
+
+    dir(StringIO) # Placate PyFlakes
+except ImportError:
     from StringIO import StringIO
 
 import mimetypes
@@ -68,3 +71,8 @@ def upload_zip_file_s3(bucket, zip_file):
         content_string = StringIO()
         content_string.write(content)
         push_file_to_s3(bucket, filename, content_string)
+
+
+def get_random_filename(filename):
+    ext = filename.split('.')[-1]
+    return "%s.%s" % (str(uuid4()), ext)
