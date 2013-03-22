@@ -1,3 +1,5 @@
+from chardet import detect
+
 try:
     from cStringIO import StringIO
 except:
@@ -28,10 +30,9 @@ def push_file_to_s3(bucket, file_name, content):
     """
     Save file.
     """
-    key = bucket.new_key(file_name)
-    content.seek(0)
-
     try:
+        key = bucket.new_key(file_name)
+        content.seek(0)
         content_type = mimetypes.guess_type(file_name)[0]
         if content_type:
             key.set_metadata('Content-Type', content_type)
@@ -59,7 +60,7 @@ def fileiterator(zip_file):
         filelist = openzip.infolist()
         for f in filelist:
             if f.file_size:
-                yield (f.filename, openzip.read(f))
+                yield (unicode(f.filename, detect(f.filename)['encoding']), openzip.read(f))
 
 
 def upload_zip_file_s3(bucket, zip_file):
