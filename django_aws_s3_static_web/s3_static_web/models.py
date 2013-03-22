@@ -62,6 +62,7 @@ class StaticWebBucket(TimeStampedModel):
             except Exception as e:
                 result['errors'].append(e.error_message)
         self.website_endpoint = bucket.get_website_endpoint()
+        return result
 
     def remove_bucket(self):
         conn = connect_aws_s3()
