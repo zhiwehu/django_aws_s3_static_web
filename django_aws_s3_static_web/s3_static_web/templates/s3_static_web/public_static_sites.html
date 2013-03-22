@@ -10,7 +10,9 @@
         {% if static_sites %}
             <ul>
                 {% for static_site in static_sites %}
-                    <li>{{ static_site }}</li>
+                    <li>
+                        <a href="http://{{ static_site.website_endpoint }}">{{ static_site }}</a>
+                    </li>
                 {% endfor %}
             </ul>
         {% endif %}

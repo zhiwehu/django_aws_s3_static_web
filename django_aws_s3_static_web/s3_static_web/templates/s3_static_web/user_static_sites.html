@@ -10,7 +10,13 @@
         {% if static_sites %}
             <ul>
                 {% for static_site in static_sites %}
-                    <li>{{ static_site }}</li>
+                    <li>
+                        <a href="http://{{ static_site.website_endpoint }}">{{ static_site }}</a>
+                        <a class="btn btn-small btn-primary"
+                           href="{% url 'edit_static_site' static_site.id %}">{% trans "Edit" %}</a>
+                        <a class="btn btn-small btn-danger"
+                           href="{% url 'delete_static_site' static_site.id %}">{% trans "Delete" %}</a>
+                    </li>
                 {% endfor %}
             </ul>
         {% endif %}

@@ -6,7 +6,7 @@ from django.utils.translation import ugettext as _
 
 from model_utils.models import TimeStampedModel
 
-from .utils import upload_zip_file_s3, get_random_filename
+from .utils import upload_zip_file_s3, get_random_filename, connect_aws_s3
 
 try:
     from PIL import Image
@@ -54,7 +54,9 @@ class StaticWebBucket(TimeStampedModel):
         self.website_endpoint = bucket.get_website_endpoint()
 
     def remove_bucket(self):
-        # TODO
+        conn = connect_aws_s3()
+        bucket = conn.get_bucket(self.bucket_name)
+        conn.delete_bucket(bucket)
         pass
 
     def save(self, *args, **kwargs):
