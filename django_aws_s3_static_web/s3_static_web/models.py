@@ -50,17 +50,17 @@ class StaticWebBucket(TimeStampedModel):
         try:
             upload_zip_file_s3(bucket, self.zip_file)
         except Exception as e:
-            result['error'].append(e.error_message)
+            result['errors'].append(e.error_message)
         if self.index_html:
             try:
                 bucket.configure_website(suffix=self.index_html)
             except Exception as e:
-                result['error'].append(e.error_message)
+                result['errors'].append(e.error_message)
         if self.error_html:
             try:
                 bucket.configure_website(error_key=self.error_html)
             except Exception as e:
-                result['error'].append(e.error_message)
+                result['errors'].append(e.error_message)
         self.website_endpoint = bucket.get_website_endpoint()
 
     def remove_bucket(self):
